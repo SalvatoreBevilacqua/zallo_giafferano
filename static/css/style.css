@@ -1,40 +1,232 @@
+/* Global styles */
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    font-family: 'Roboto', sans-serif;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
 .text-shadow {
     text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
 }
 
+/* Navbar styles */
 nav .brand-logo {
     padding-left: 15px;
-    color: #ffc400;
+    font-weight: 500;
     position: relative;
 }
 
-.nav-h {
-    height: 70px;
+nav ul a {
+    font-size: 1.1rem;
+    transition: background-color 0.3s;
+    height: 64px;
+    line-height: 64px;
 }
 
-.sidenav li>a{
+.sidenav li>a {
     color: white;
+    font-size: 16px;
+    transition: background-color 0.3s;
 }
 
+.sidenav li>a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidenav .user-view {
+    padding: 16px 16px 0;
+}
+
+.sidenav .user-view .name {
+    font-size: 1.4rem;
+    margin-top: 8px;
+    margin-bottom: 4px;
+}
+
+.sidenav .user-view .email {
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* Hero section */
+.hero-section {
+    margin-bottom: 2rem;
+}
+
+.parallax-container {
+    height: 400px;
+    display: flex;
+    align-items: center;
+}
+
+/* Flash messages */
 .flashes h5 {
     line-height: 2;
     background-color: #ffd54f;
     text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
 }
 
-.row {
+/* Card styles */
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card.hoverable:hover {
+    transform: translateY(-5px);
+}
+
+.card .card-title {
+    font-weight: 500;
+}
+
+.card-content {
+    padding: 20px;
+}
+
+.card-content-h {
+    height: 120px;
+    overflow: hidden;
+}
+
+.recipe-card {
+    height: 450px;
+    display: flex;
+    flex-direction: column;
+}
+
+.recipe-card .card-image {
+    height: 200px;
+    overflow: hidden;
+}
+
+.recipe-card .card-image img {
+    height: 100%;
+    object-fit: cover;
+}
+
+.recipe-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.recipe-meta span {
+    display: flex;
+    align-items: center;
+}
+
+.recipe-meta i {
+    margin-right: 5px;
+}
+
+.recipe-img {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Profile styles */
+.profile-avatar {
+    font-size: 8rem;
+    margin: 10px 0;
+}
+
+/* Form styles */
+.input-field .prefix {
+    color: #5c6bc0; /* indigo lighten-1 */
+}
+
+.chip {
+    margin: 5px;
+    transition: background-color 0.3s;
+}
+
+.chip.active {
+    background-color: #5c6bc0;
+    color: white;
+}
+
+.chip-container {
+    margin: 10px 0;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.helper-text {
+    color: #757575;
+}
+
+/* Table styles */
+.responsive-table th {
+    font-weight: 500;
+    color: #5c6bc0;
+}
+
+.actions-cell {
+    white-space: nowrap;
+}
+
+/* Pagination */
+.pagination li.active {
+    background-color: #5c6bc0;
+}
+
+/* Utility classes */
+.mb-0 {
     margin-bottom: 0;
 }
 
-.card {
-    float: left;
-    position: relative;
+/* Animations */
+.btn, .btn-large, .btn-small {
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.card-content{
-    text-align: center;
-    }
+.btn:hover, .btn-large:hover, .btn-small:hover {
+    transform: translateY(-2px);
+}
 
-.card-content-h{
-    height: 100px;
+/* Modal styles */
+.modal {
+    border-radius: 8px;
+}
+
+.modal-footer {
+    border-radius: 0 0 8px 8px;
+}
+
+/* Mobile responsiveness */
+@media only screen and (max-width: 600px) {
+    .container {
+        width: 95%;
+    }
+    
+    .card-panel {
+        padding: 16px;
+    }
+    
+    .recipe-card {
+        height: auto;
+    }
+    
+    .btn, .btn-large, .btn-small {
+        margin-bottom: 10px;
+    }
+    
+    .profile-avatar {
+        font-size: 6rem;
+    }
+}
+
+/* Login/Register styles */
+.login-card, .register-card {
+    margin-top: 2rem;
+}
+
+.login-card .card-title, .register-card .card-title {
+    font-size: 2rem;
+    font-weight: 500;
 }
