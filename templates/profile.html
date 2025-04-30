@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <h3 class="light-blue-text text-darken-4 center-align">{{ username }}'s Profile</h3>
+    
+    <div class="container-fluid">
+        <div class="row">
+            {% for recipe in profile %}
+                {% if session.user|lower == recipe.created_by|lower or session.user|lower == "admin"|lower %}
+                    <div class="col m4 sm6">
+                        <div class="card">
+                            <div class="card-image">
+                                <img style="height: 190px;" src="{{ recipe.image }}">
+                            </div>
+                            <div class="card-content card-content-h">
+                                <p>
+                                <strong>{{ recipe.plate_name }}</strong>
+                                </p>
+                                <p><em>by: {{ recipe.created_by }}</em></p>
+                            </div>
+                            <!-- read recipe -->
+                            <div class="card-action card-content center-align">
+                                <a href="#modal{{ recipe._id }}" class="modal-trigger" style="margin: 0">Read the Recipe</a>
+                            </div>
+                            <div id="modal{{ recipe._id }}" class="modal">
+                                <div class="modal-content">
+                                    <h4>{{ recipe.plate_name }}</h4>
+                                    <h6>Ingredients: {{ recipe.ingredients }}</h6>
+                                    <p>{{ recipe.preparation }}</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+                                </div>
+                            </div>
+                            <!-- edit and delete button -->
+                            <div class="row center-align">
+                                <div class="col s12">                                
+                                    <a href="{{ url_for('edit_recipe', recipe_id=recipe._id) }}" class="waves-effect blue btn-small">
+                                        <i class="material-icons right">edit</i>Edit</a>
+                                    <a href="{{ url_for('delete_recipe', recipe_id=recipe._id) }}" class="waves-effect red btn-small">
+                                        <i class="material-icons right">cancel</i>Delete</a>                                   
+                                </div>
+                            </div>
+                            <br/>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

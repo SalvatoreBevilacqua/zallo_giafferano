@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <div class="row">
+        <div class="col s12 m8 offset-m2">
+            <div class="card-panel">
+                <h3 class="center-align light-blue-text text-darken 4">
+                    Add Recipe
+                </h3>
+                <div class="row">
+                    <form class="col s12" method="POST" enctype="multipart/form-data" action="{{ url_for('add_recipe') }}">
+                        <!-- choose a dish from db -->
+                        <div class="input-field">
+                            <select id="dish_name" name="dish_name" class="validate" required>
+                            <option value="" disabled selected>Choose your Dish</option>
+                            {% for dish in dish %}
+                                <option value="{{ dish.dish_name }}">{{ dish.dish_name }}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                        <!-- choose the ingredients -->
+                        <div class="input-field validate" required>
+                            <select multiple id="ingredients" name="ingredients" class="validate" required>
+                            <option value="" disabled selected>Choose the Ingredients</option>
+                            {% for ingredients in ingredients %}
+                                    <option value="{{ ingredients.ingredients }}">{{ ingredients.ingredients }}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                        <!-- add image -->
+                        <div class = "row">
+                            <div class="input-field col s12">
+                                <i class="material-icons prefix">insert_link</i>
+                                <input id="image" name="image" minlength="5" maxlength="100"
+                                    type="text" class="validate" required>
+                                <label for="Image">Copy the URL image here</label>
+                            </div>
+                        </div>
+                        <!-- name of the dish -->
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <i class="material-icons prefix">menu_book</i>
+                                <input id="plate_name" name="plate_name" minlength="5" maxlength="50"
+                                    type="text" class="validate" required>
+                                <label for="plate_name">Plate Name</label>
+                            </div>
+                        </div>
+                        <!-- preparation of the dish -->
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <i class="material-icons prefix">local_dining</i>
+                                <textarea id="preparation" name="preparation" minlength="5"
+                                    maxlength="9999" class="materialize-textarea validate" required></textarea>
+                                <label for="preparation">Preparation</label>
+                            </div>
+                        </div>
+                        <!-- submit button -->
+                        <div class="row">
+                            <div class="col s12 center-align">
+                                <button class="col s12 btn-large waves-effect indigo lighten-1" type="submit">
+                                    Add Recipe<i class="material-icons right">send</i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div >
+    </div>    
+
+{% endblock %}

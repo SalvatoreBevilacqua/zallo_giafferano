@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <div class="row">
+        <div class="col s12 m8 offset-m2">
+            <div class="card-panel">
+                <h3 class="center-align light-blue-text text-darken 4">
+                    Edit Recipe
+                </h3>
+                <div class="row">
+                    <form class="col s12" method="POST" action="{{ url_for('edit_recipe', recipe_id=recipe._id) }}">
+                        <!-- edit a dish -->
+                        <div class="input-field">
+                            <select id="dish_name" name="dish_name" class="validate" required>
+                            <option value="" disabled>Edit your Dish</option>
+                            {% for dish in dish %}
+                                {% if dish.dish_name == recipe.dish_name %}
+                                    <option value="{{ dish.dish_name }}" selected>{{ dish.dish_name }}</option>
+                                {% else %}
+                                    <option value="{{ dish.dish_name }}">{{ dish.dish_name }}</option>
+                                {% endif %}
+                            {% endfor %}
+                            </select>
+                        </div>
+                        <!-- edit the ingredients -->
+                        <div class="input-field validate" required>
+                            <select multiple id="ingredients" name="ingredients" class="validate" required>
+                            <option value="" disabled>Edit the Ingredients</option>
+                            {% for ingredients in ingredients %}
+                                {% if ingredients.ingredients == recipe.ingredients %}
+                                    <option value="{{ ingredients.ingredients }}" selected>{{ ingredients.ingredients }}</option>
+                                {% else %}
+                                    <option value="{{ ingredients.ingredients }}">{{ ingredients.ingredients }}</option>
+                                {% endif %}
+                            {% endfor %}
+                            </select>
+                        </div>
+                        <!-- edit image -->
+                        <div class = "row">
+                            <div class="input-field col s12">
+                                <i class="material-icons prefix">insert_link</i>
+                                <input id="image" name="image" minlength="5" maxlength="100"
+                                    value="{{ recipe.image }}" type="text" class="validate" required>
+                                <label for="Image">Edit the URL image here</label>
+                            </div>
+                        </div>
+                        <!-- edit the name of the plate -->
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <i class="material-icons prefix">stars</i>
+                                <input id="plate_name" name="plate_name" minlength="5" maxlength="50"
+                                    value="{{ recipe.plate_name }}" type="text" class="validate" required>
+                                <label for="plate_name">Edit the Plate Name</label>
+                            </div>
+                        </div>
+                        <!-- edit the preparation of the plate -->
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <i class="material-icons prefix">local_dining</i>
+                                <textarea id="preparation" name="preparation" minlength="5"
+                                    maxlength="9999" class="materialize-textarea validate" required>
+                                    {{- recipe.preparation -}}
+                                </textarea>
+                                <label for="preparation">Edit the Preparation</label>
+                            </div>
+                        </div>
+                        <!-- edit button -->
+                        <div class="row">
+                            <div class="col s12 center-align">
+                                <a href="{{ url_for('recipe') }}" class="btn-large waves-effect red">
+                                Cancel<i class="material-icons right">cancel</i>
+                                </a>
+                                <button class="btn-large waves-effect indigo lighten-1" type="submit">
+                                    Edit Recipe<i class="material-icons right">edit</i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div >
+    </div>
+
+    
+
+{% endblock %}

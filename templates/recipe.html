@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <h3 class="light-blue-text text-darken-4 center-align">All Recipes</h3>
+
+    <div>
+        <form action="{{ url_for('search') }}" method="post" class="col12 m8 offset-m2">
+            <div class="row center-align">
+                <div class="input-field col s12 m8">
+                    <i class="material-icons prefix">folder_open</i>
+                    <input type="text" name="query" id="query" minlength="3" class="validate" required>
+                    <label for="query">Search for the Name or by the Ingredients</label>
+                </div>
+                <div class="col s12 m4">
+                    <a href="{{ url_for('recipe') }}" class="red btn text-shadow">Reset</a>
+                    <button type="submit" class="light-blue darken-1 btn text-shadow">
+                        <i class="material-icons right">search</i> Search
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <br/>
+
+    {% if recipe|length > 0 %}
+    <div class="container-fluid">
+        <div class="row">
+            {% for recipe in recipe %}
+                <div class="col m4 sm6">
+                    <div class="card">
+                        <div class="card-image">
+                            <img style="height: 190px;" src="{{ recipe.image }}">
+                        </div>
+                        <div class="card-content card-content-h">
+                            <p>
+                            <strong>{{ recipe.plate_name }}</strong>
+                            </p>
+                            <p><em>by: {{ recipe.created_by }}</em></p>
+                        </div>
+                        <!-- read recipe -->
+                        <div class="card-action center-align">
+                            <a href="#modal{{ recipe._id }}" class="modal-trigger" style="margin: 0">Read the Recipe</a>
+                        </div>
+                        <div id="modal{{ recipe._id }}"class="modal">
+                            <div class="modal-content">
+                            <h4>{{ recipe.plate_name }}</h4>
+                            <h6>Ingredients: {{ recipe.ingredients }}</h6>
+                            <p>{{ recipe.preparation }}</p>
+                            </div>
+                            <div class="modal-footer">
+                            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+        <h3 class="red-text text-darken-4 center-align">No Results Found</h3>
+    {% endif %}
+
+ {% endblock %}

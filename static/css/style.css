@@ -1,0 +1,40 @@
+.text-shadow {
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+}
+
+nav .brand-logo {
+    padding-left: 15px;
+    color: #ffc400;
+    position: relative;
+}
+
+.nav-h {
+    height: 70px;
+}
+
+.sidenav li>a{
+    color: white;
+}
+
+.flashes h5 {
+    line-height: 2;
+    background-color: #ffd54f;
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+.row {
+    margin-bottom: 0;
+}
+
+.card {
+    float: left;
+    position: relative;
+}
+
+.card-content{
+    text-align: center;
+    }
+
+.card-content-h{
+    height: 100px;
+}
