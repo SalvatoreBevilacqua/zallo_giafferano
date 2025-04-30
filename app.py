@@ -50,6 +50,33 @@ def home():
     )
 
 
+@app.route("/edit_profile/<username>", methods=["GET", "POST"])
+@login_required
+def edit_profile(username):
+    """
+    Edit user profile information
+    """
+    # Check if user matches profile being edited
+    if username != session["user"] and session["user"] != "admin":
+        flash("You can only edit your own profile")
+        return redirect(url_for("profile", username=session["user"]))
+    
+    if request.method == "POST":
+        # Update user document
+        submit = {
+            "bio": request.form.get("bio"),
+            "email": request.form.get("email")
+        }
+        
+        # Update user in database
+        mongo.db.users.update_one({"username": username}, {"$set": submit})
+        flash("Profile Successfully Updated")
+        
+        return redirect(url_for("profile", username=username))
+
+    return redirect(url_for("profile", username=username))
+
+
 @app.route("/recipe", methods=["GET", "POST"])
 def recipe():
     """
@@ -69,9 +96,13 @@ def recipe():
     # Get recipes for current page
     recipes = list(mongo.db.recipe.find().sort("_id", -1).skip(skip).limit(per_page))
     
+    # Get all dish categories for filtering
+    dishes = list(mongo.db.dish.find().sort("dish_name", 1))
+    
     return render_template(
         "recipe.html", 
         recipe=recipes, 
+        dishes=dishes,
         current_page=page, 
         total_pages=total_pages
     )

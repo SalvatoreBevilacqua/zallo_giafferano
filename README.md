@@ -1,126 +1,156 @@
-# Data Centric Development Milestone Project
-# Zallo Giafferano
+# Zallo Giafferano - Recipe Sharing Platform
 
-This Website has been developed for Code Institute's Data Centric Development Milestone Project and represents a recipe site. Is a multi-page site with which the User can interact to add, modify and delete cooking recipes.
+Zallo Giafferano is a community-driven recipe sharing platform built with Flask and MongoDB. It allows users to create, share, and discover cooking recipes from around the world.
 
-## UX
-
-This Project is to demonstrate lessons learned in this section Python Fundamentals and Data Centric Development.
-The idea of the project is inspired by the various sites born on the web.
-The realization was born to apply the notions learned in the Python fundamentals and Data Centric modules.
-
-## Scenario
-
-As mentioned above, I have created a basic website using, as much as I could, all the notions that I have received during this period. My aim is to continue building my website and develop, in particular, my projects page as that will be my business card for whoever would like to contact me and know more about my services and what I can, eventually, do for them.
+![Zallo Giafferano Screenshot](https://images.unsplash.com/photo-1495195134817-aeb325a55b65?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80)
 
 ## Features
 
-The basic structure of the page is to allow the User a simple navigation.
+* **User Authentication**: Register, login, and logout functionality  
+* **CRUD Operations**: Create, read, update, and delete recipes  
+* **Recipe Management**: Browse recipes with pagination and filtering  
+* **Search Functionality**: Search recipes by name or ingredients  
+* **User Profiles**: Personalized profiles with user statistics  
+* **Like System**: Users can like recipes  
+* **Admin Panel**: Manage ingredients and recipe categories  
+* **Responsive Design**: Works on mobile and desktop devices
 
-* **Navbar**: Composed by on the webpage logo on the left corner and at the opposite end the communication buttons for the navigation links to various pages.
+## Technology Stack
 
-* **Mobile Sidenav**: Which shows the webpage logo at the top and under the communication buttons for the navigation links to various pages.
+* **Backend**: Python, Flask  
+* **Database**: MongoDB  
+* **Frontend**: HTML, CSS, JavaScript  
+* **UI Framework**: Materialize CSS  
+* **Authentication**: Werkzeug Security  
+* **Additional Libraries**: jQuery, Font Awesome
 
-* **Section**: The body of the pages have been applied, where possible, the reuse of the codes according to the spirit of programming. Making navigation between sections homogeneous.
+## Local Development Setup
 
-* **Register/Login/Logout**: User interaction begins with registration or via the login page providing Username and password. Once the actions have been completed on the web page, the User is able to use the logout button to disconnect from the session.
+### Prerequisites
 
-* **CRUD**: Within the web page the User is able Create, Read, Update, Delete the Cooking Recipes.
+* Python 3.6 or higher  
+* MongoDB running on localhost:27017  
+* Git
 
-### Existing Features
+### Installation
 
-The first function that the User can do is interact with the web page through the Home, where he has access to all the recipes loaded into the database. It is also possible to carry out a search using the search function.
-The User can register, log in and log out of the web page through the links button provided.
-The User is able to complete all requests for CRUD (Create, Read, Update and Delete) the recipes. Furthermore, a limitation to this function has been added, only to the creators of the same recipes and to the admin page can have access to Edit and Delete functions.
+1. Clone the repository:
+   ```bash
+   git clone <your-repository-url>
+   cd zallo-giafferano
+   ```
 
-### Features Left to Implement
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-In particular, for this project I would like to increase:
- - The functionality and the possibility for the User to manage the database of Ingredients through Python funciont, as was done for the add the recipes. 
- - To a calendar with meals of the day organized according to the dishes chosen by the User.
- - Update the security of the web page both by requesting a confermation email on registration and providing to the User a double confirmation while requesting to delete one or more recipes.
+3. Initialize the database with sample data:
+   ```bash
+   python init_database.py
+   ```
 
-## Technologies Used
+4. Run the application:
+   ```bash
+   python app.py
+   ```
 
-For this project I used:
+5. Access the application at `http://localhost:5000`
 
-- [HTML5]( https://en.wikipedia.org/wiki/HTML5)
-    - The project uses **HTML5** to structure the content in line with modern semantic html5.
+### Demo Admin Account
 
-- [CSS3](https://en.wikipedia.org/wiki/Cascading_Style_Sheets#CSS_3)
-    - The project uses **CSS3** to style the html content.
+* Username: admin  
+* Password: admin
 
-- [PYTHON](https://it.wikipedia.org/wiki/Python)
-    - The project uses **PYTHON** to create functions.
+## Project Structure
 
-- [Jquery](https://it.wikipedia.org/wiki/JQuery)
-    - I used **Jquery** to manage, manipulate animations and simplify the use of AJAX functionality.
+```
+zallo-giafferano/
+├── app.py                # Main application file
+├── init_database.py      # Database initialization script
+├── requirements.txt      # Python dependencies
+├── static/               # Static files (CSS, JS)
+│   ├── css/
+│   │   └── style.css
+│   └── js/
+│       └── script.js
+└── templates/            # HTML templates
+    ├── add_category.html
+    ├── add_ingredient.html
+    ├── add_recipe.html
+    ├── base.html
+    ├── edit_recipe.html
+    ├── home.html
+    ├── login.html
+    ├── manage_categories.html
+    ├── manage_ingredients.html
+    ├── profile.html
+    ├── recipe.html
+    └── register.html
+```
 
-- [Materialize](https://materializecss.com/)
-    - I used **Materialize** as a front-end framework for for styling the progect, icons, navbar.
+## Features in Detail
 
-- [Randomkeygen](https://randomkeygen.com/)
-    - I used **Randomkeygen** to generate passes for SECRET_KEY in Herokuto generate passes for SECRET_KEY in Heroku.
+### Recipe Management
 
-- [MongoDB](https://it.wikipedia.org/wiki/MongoDB)
-    - I used **MongoDB** as a database for the project.
+Users can browse, search, and filter recipes by category. Each recipe displays:
+- Recipe name and image
+- Creator information
+- Category and like count
+- Ingredients list
+- Preparation instructions
 
-- [Heroku](https://it.wikipedia.org/wiki/Heroku)
-    - I used **Heroku** as a Cloud to develop, distribute and manage apps directly online.
+### User Profiles
 
-- [Werkzeug](https://werkzeug.palletsprojects.com/en/1.0.x/)
-    - I used **Werkzeug** this library for generate_password_hash / check_password_hash. 
+Each user has a profile page that displays:
+- Recipe count
+- Total likes received
+- Categories used
+- All recipes created by the user
 
-- [Google Images](https://www.google.com/imghp?hl=en)
-    - I used **Google Images** to find the Images for my user`s review.
+### Admin Features
+
+Admin users (username: admin) can:
+- Manage recipe categories (add, edit, delete)
+- Manage ingredients (add, edit, delete)
+
+## Future Enhancements
+
+- Email confirmation for account registration  
+- Password reset functionality  
+- Recipe ratings and comments  
+- User favorites and meal planning  
+- More advanced search and filtering options  
+- Image upload functionality
 
 ## Testing
 
-To test this project I used various browsers and devices:
+The application has been tested on:
 
-#### Mobile Browsers
-* Chrome
-* Safari
-
-#### Desktop Browsers
-* Chrome
-
-#### Devices
-* ThinkPad X1 Carbon
-* Samsung S8
-* Huawei p20 pro
-* Iphone X
-
-During testing i used Chrome Developer tools to test the responsive design on different size and the features of the page on different width.
-
-The site was developed following the Bootstrap Grid System and the same was tested to ensure that all the elements are responsive on the following resolutions on each page:
-
-- Width ≥1200px
-- Width ≤ 600px
-
-### Validation Testings
-
-For HTML validation testing I used ["W3 Validator"](https://validator.w3.org/nu/?doc=https%3A%2F%2Fgello94.github.io%2Ffirst-milestone-antonio%2F) which shows the html documents to be valid.
-
-For CSS validation testing I used ["W3 CSS Validator"](http://jigsaw.w3.org/css-validator/validator?uri=https%3A%2F%2Fgello94.github.io%2Ffirst-milestone-antonio%2F&profile=css3svg&usermedium=all&warning=1&vextwarning=&lang=it) which shows the stylesheet to be valid CSS3.
+- **Desktop Browsers**: Chrome, Firefox, Safari  
+- **Mobile Browsers**: Chrome (Android), Safari (iOS)  
+- **Devices**: Various smartphones and tablets
 
 ## Deployment
 
-This page has been deployed to ["Heroku Pages"](https://dashboard.heroku.com/apps/milestone-project-salvatore-b).
+For production deployment:
 
-Heroku is used to host the code and publish the pages.
-
-After a final Git Add and Git commit
-
-`$git add .`
-
-`$git commit -m "Final commit"`
-
-The pages were pushed to the GitHub repository
-
-`$ git push -u origin master`
+1. Update the MongoDB connection URI in `app.py`  
+2. Set debug to False in `app.py`  
+3. Deploy to your preferred hosting platform
 
 ## Credits
 
-For this project I had ispiration by the Example Idea 1 Project of Code Institute's Data Centric Development Milestone Project.
+- Materialize CSS for the UI components  
+- Unsplash for the sample images  
+- Font Awesome for the icons  
+- MongoDB for the database  
+- Flask for the web framework
 
+## License
+
+MIT License
+
+## Author
+
+Salvatore Bevilacqua
