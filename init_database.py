@@ -1,6 +1,7 @@
 import os
 from flask import Flask
 from flask_pymongo import PyMongo
+from werkzeug.security import generate_password_hash
 
 app = Flask(__name__)
 app.config["MONGO_DBNAME"] = "zallo_giafferano"
@@ -28,6 +29,13 @@ def init_database():
         ]
         mongo.db.dish.insert_many(dish_categories)
         print(f"Added {len(dish_categories)} dish categories")
+    else:
+        # Update existing categories to add description if missing
+        result = mongo.db.dish.update_many(
+            {"description": {"$exists": False}},
+            {"$set": {"description": ""}}
+        )
+        print(f"Updated {result.modified_count} categories with 'description' field")
     
     # Add sample ingredients
     if mongo.db.ingredients.count_documents({}) == 0:
@@ -45,10 +53,16 @@ def init_database():
         ]
         mongo.db.ingredients.insert_many(ingredients)
         print(f"Added {len(ingredients)} ingredients")
+    else:
+        # Update existing ingredients to add category if missing
+        result = mongo.db.ingredients.update_many(
+            {"category": {"$exists": False}},
+            {"$set": {"category": "Other"}}
+        )
+        print(f"Updated {result.modified_count} ingredients with 'category' field")
     
     # Create a demo admin user
     if mongo.db.users.count_documents({"username": "admin"}) == 0:
-        from werkzeug.security import generate_password_hash
         admin_user = {
             "username": "admin",
             "password": generate_password_hash("admin"),
@@ -58,6 +72,28 @@ def init_database():
         }
         mongo.db.users.insert_one(admin_user)
         print("Created demo admin user (username: admin, password: admin)")
+    else:
+        # Update existing users to add email, bio and favorites if missing
+        result = mongo.db.users.update_many(
+            {"$or": [
+                {"email": {"$exists": False}},
+                {"bio": {"$exists": False}},
+                {"favorites": {"$exists": False}}
+            ]},
+            {"$set": {
+                "email": "",
+                "bio": "",
+                "favorites": []
+            }}
+        )
+        print(f"Updated {result.modified_count} users with 'email', 'bio', and 'favorites' fields")
+    
+    # Update recipes to add likes field if missing
+    result = mongo.db.recipe.update_many(
+        {"likes": {"$exists": False}},
+        {"$set": {"likes": 0}}
+    )
+    print(f"Updated {result.modified_count} recipes with 'likes' field")
     
     print("Database initialization complete!")
     print("You can now run the application with: python app.py")
