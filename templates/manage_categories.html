@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% block title %}Manage Categories{% endblock %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col s12 center-align">
+            <h3 class="indigo-text text-lighten-1">Manage Categories</h3>
+            <a href="{{ url_for('add_category') }}" class="btn-large waves-effect waves-light indigo lighten-1">
+                <i class="material-icons left">add</i>Add New Category
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s12">
+            <div class="card">
+                <div class="card-content">
+                    {% if categories|length > 0 %}
+                        <!-- Search/Filter Box -->
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <i class="material-icons prefix">search</i>
+                                <input type="text" id="category-search" onkeyup="filterCategories()" placeholder="Search for categories...">
+                                <label for="category-search">Search Categories</label>
+                            </div>
+                        </div>
+
+                        <!-- Categories Table -->
+                        <table class="responsive-table highlight">
+                            <thead>
+                                <tr>
+                                    <th>Category Name</th>
+                                    <th>Description</th>
+                                    <th>Recipe Count</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for category in categories %}
+                                    <tr>
+                                        <td>{{ category.dish_name }}</td>
+                                        <td>{{ category.description if category.description else "No description available" }}</td>
+                                        <td>
+                                            <!-- We'd need to run a MongoDB aggregation for this -->
+                                            <span class="new badge indigo lighten-1" data-badge-caption="recipes">
+                                                <!-- This is a placeholder, we'd need to add recipe counts to our route -->
+                                                {% set count = {"value": 0} %}
+                                                {% for recipe in recipes %}
+                                                    {% if recipe.dish_name == category.dish_name %}
+                                                        {% set _ = count.update({"value": count.value + 1}) %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {{ count.value }}
+                                            </span>
+                                        </td>
+                                        <td class="actions-cell">
+                                            <a href="{{ url_for('edit_category', category_id=category._id) }}" class="btn-small indigo lighten-1">
+                                                <i class="material-icons">edit</i>
+                                            </a>
+                                            <a href="#delete-modal-{{ category._id }}" class="btn-small red modal-trigger">
+                                                <i class="material-icons">delete</i>
+                                            </a>
+                                            
+                                            <!-- Delete Confirmation Modal -->
+                                            <div id="delete-modal-{{ category._id }}" class="modal">
+                                                <div class="modal-content">
+                                                    <h4>Confirm Deletion</h4>
+                                                    <p>Are you sure you want to delete the category "{{ category.dish_name }}"?</p>
+                                                    {% set count = {"value": 0} %}
+                                                    {% for recipe in recipes %}
+                                                        {% if recipe.dish_name == category.dish_name %}
+                                                            {% set _ = count.update({"value": count.value + 1}) %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {% if count.value > 0 %}
+                                                        <p class="red-text">Warning: There are {{ count.value }} recipes using this category. 
+                                                            Deleting it will affect these recipes.</p>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancel</a>
+                                                    <a href="{{ url_for('delete_category', category_id=category._id) }}" class="waves-effect waves-light btn red">
+                                                        Delete
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="center-align">
+                            <p>No categories found in the database.</p>
+                            <p>Start by adding some categories!</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function(){
+        $('.modal').modal();
+    });
+    
+    // Filter categories by name
+    function filterCategories() {
+        let input = document.getElementById('category-search');
+        let filter = input.value.toUpperCase();
+        let table = document.querySelector('table');
+        let tr = table.getElementsByTagName('tr');
+        
+        for (let i = 1; i < tr.length; i++) { // Start from 1 to skip header
+            let td = tr[i].getElementsByTagName('td')[0]; // Category name column
+            if (td) {
+                let txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = '';
+                } else {
+                    tr[i].style.display = 'none';
+                }
+            }
+        }
+    }
+</script>
+{% endblock %}

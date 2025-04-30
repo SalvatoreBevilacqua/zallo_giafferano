@@ -1,86 +1,168 @@
 {% extends "base.html" %}
+{% block title %}Edit Recipe{% endblock %}
 {% block content %}
 
+<div class="container">
     <div class="row">
-        <div class="col s12 m8 offset-m2">
+        <div class="col s12 m10 offset-m1 l8 offset-l2">
             <div class="card-panel">
-                <h3 class="center-align light-blue-text text-darken 4">
-                    Edit Recipe
-                </h3>
-                <div class="row">
-                    <form class="col s12" method="POST" action="{{ url_for('edit_recipe', recipe_id=recipe._id) }}">
-                        <!-- edit a dish -->
-                        <div class="input-field">
+                <h3 class="center-align indigo-text text-lighten-1">Edit Recipe</h3>
+                
+                <form class="col s12" method="POST" action="{{ url_for('edit_recipe', recipe_id=recipe._id) }}">
+                    <!-- Recipe Type Section -->
+                    <div class="row">
+                        <div class="col s12">
+                            <h5 class="indigo-text text-lighten-1">
+                                <i class="material-icons left">restaurant</i> Recipe Type
+                            </h5>
+                        </div>
+                        
+                        <div class="input-field col s12">
                             <select id="dish_name" name="dish_name" class="validate" required>
-                            <option value="" disabled>Edit your Dish</option>
-                            {% for dish in dish %}
-                                {% if dish.dish_name == recipe.dish_name %}
-                                    <option value="{{ dish.dish_name }}" selected>{{ dish.dish_name }}</option>
-                                {% else %}
-                                    <option value="{{ dish.dish_name }}">{{ dish.dish_name }}</option>
-                                {% endif %}
-                            {% endfor %}
+                                <option value="" disabled>Choose your dish type</option>
+                                {% for dish in dish %}
+                                    {% if dish.dish_name == recipe.dish_name %}
+                                        <option value="{{ dish.dish_name }}" selected>{{ dish.dish_name }}</option>
+                                    {% else %}
+                                        <option value="{{ dish.dish_name }}">{{ dish.dish_name }}</option>
+                                    {% endif %}
+                                {% endfor %}
                             </select>
+                            <label for="dish_name">Dish Type</label>
                         </div>
-                        <!-- edit the ingredients -->
-                        <div class="input-field validate" required>
+                    </div>
+                    
+                    <!-- Recipe Name Section -->
+                    <div class="row">
+                        <div class="col s12">
+                            <h5 class="indigo-text text-lighten-1">
+                                <i class="material-icons left">create</i> Recipe Details
+                            </h5>
+                        </div>
+                        
+                        <div class="input-field col s12">
+                            <i class="material-icons prefix">menu_book</i>
+                            <input id="plate_name" name="plate_name" minlength="3" maxlength="50"
+                                type="text" class="validate" value="{{ recipe.plate_name }}" required>
+                            <label for="plate_name">Recipe Name</label>
+                            <span class="helper-text" data-error="Recipe name must be between 3 and 50 characters" data-success="Great!">
+                                Give your recipe a descriptive name (3-50 characters)
+                            </span>
+                        </div>
+                        
+                        <div class="input-field col s12">
+                            <i class="material-icons prefix">insert_link</i>
+                            <input id="image" name="image" type="url" class="validate" value="{{ recipe.image }}" required
+                                placeholder="https://example.com/image.jpg">
+                            <label for="image">Image URL</label>
+                            <span class="helper-text" data-error="Please enter a valid URL" data-success="Valid URL format!">
+                                Provide a URL to an image of your dish
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- Ingredients Section -->
+                    <div class="row">
+                        <div class="col s12">
+                            <h5 class="indigo-text text-lighten-1">
+                                <i class="material-icons left">kitchen</i> Ingredients
+                            </h5>
+                        </div>
+                        
+                        <div class="input-field col s12">
                             <select multiple id="ingredients" name="ingredients" class="validate" required>
-                            <option value="" disabled>Edit the Ingredients</option>
-                            {% for ingredients in ingredients %}
-                                {% if ingredients.ingredients == recipe.ingredients %}
-                                    <option value="{{ ingredients.ingredients }}" selected>{{ ingredients.ingredients }}</option>
-                                {% else %}
-                                    <option value="{{ ingredients.ingredients }}">{{ ingredients.ingredients }}</option>
-                                {% endif %}
-                            {% endfor %}
+                                <option value="" disabled>Select ingredients</option>
+                                {% for ingredient in ingredients %}
+                                    {% if ingredient.ingredient_name in recipe.ingredients %}
+                                        <option value="{{ ingredient.ingredient_name }}" selected>{{ ingredient.ingredient_name }}</option>
+                                    {% else %}
+                                        <option value="{{ ingredient.ingredient_name }}">{{ ingredient.ingredient_name }}</option>
+                                    {% endif %}
+                                {% endfor %}
                             </select>
+                            <label for="ingredients">Ingredients</label>
+                            <span class="helper-text">
+                                Hold Ctrl/Cmd to select multiple ingredients
+                            </span>
                         </div>
-                        <!-- edit image -->
-                        <div class = "row">
-                            <div class="input-field col s12">
-                                <i class="material-icons prefix">insert_link</i>
-                                <input id="image" name="image" minlength="5" maxlength="100"
-                                    value="{{ recipe.image }}" type="text" class="validate" required>
-                                <label for="Image">Edit the URL image here</label>
-                            </div>
+                    </div>
+                    
+                    <!-- Preparation Section -->
+                    <div class="row">
+                        <div class="col s12">
+                            <h5 class="indigo-text text-lighten-1">
+                                <i class="material-icons left">local_dining</i> Preparation
+                            </h5>
                         </div>
-                        <!-- edit the name of the plate -->
-                        <div class="row">
-                            <div class="input-field col s12">
-                                <i class="material-icons prefix">stars</i>
-                                <input id="plate_name" name="plate_name" minlength="5" maxlength="50"
-                                    value="{{ recipe.plate_name }}" type="text" class="validate" required>
-                                <label for="plate_name">Edit the Plate Name</label>
-                            </div>
+                        
+                        <div class="input-field col s12">
+                            <i class="material-icons prefix">description</i>
+                            <textarea id="preparation" name="preparation" minlength="30"
+                                class="materialize-textarea validate" required data-length="5000">{{ recipe.preparation }}</textarea>
+                            <label for="preparation">Preparation Instructions</label>
+                            <span class="helper-text" data-error="Please provide detailed instructions (at least 30 characters)" data-success="Great!">
+                                Provide detailed step-by-step instructions
+                            </span>
                         </div>
-                        <!-- edit the preparation of the plate -->
-                        <div class="row">
-                            <div class="input-field col s12">
-                                <i class="material-icons prefix">local_dining</i>
-                                <textarea id="preparation" name="preparation" minlength="5"
-                                    maxlength="9999" class="materialize-textarea validate" required>
-                                    {{- recipe.preparation -}}
-                                </textarea>
-                                <label for="preparation">Edit the Preparation</label>
-                            </div>
-                        </div>
-                        <!-- edit button -->
-                        <div class="row">
-                            <div class="col s12 center-align">
-                                <a href="{{ url_for('recipe') }}" class="btn-large waves-effect red">
+                    </div>
+                    
+                    <!-- Submit and Cancel Buttons -->
+                    <div class="row">
+                        <div class="col s12 center-align">
+                            <a href="{{ url_for('recipe') }}" class="btn-large waves-effect waves-light red">
                                 Cancel<i class="material-icons right">cancel</i>
-                                </a>
-                                <button class="btn-large waves-effect indigo lighten-1" type="submit">
-                                    Edit Recipe<i class="material-icons right">edit</i>
-                                </button>
-                            </div>
+                            </a>
+                            <button class="btn-large waves-effect waves-light indigo lighten-1" type="submit">
+                                Save Changes<i class="material-icons right">save</i>
+                            </button>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
-        </div >
+        </div>
     </div>
+</div>
 
-    
+{% endblock %}
 
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        $('textarea#preparation').characterCounter();
+        
+        // Ensure labels don't overlap with existing content
+        M.updateTextFields();
+        
+        // Form validation visual feedback
+        $('input, textarea, select').on('blur', function() {
+            validateField($(this));
+        });
+        
+        $('form').on('submit', function(e) {
+            let isValid = true;
+            
+            // Validate all fields before submit
+            $('input, textarea, select').each(function() {
+                if (!validateField($(this))) {
+                    isValid = false;
+                }
+            });
+            
+            if (!isValid) {
+                e.preventDefault();
+                M.toast({html: 'Please correct the errors in the form', classes: 'red'})
+            }
+        });
+        
+        function validateField(field) {
+            if (field.prop('required') && !field.val()) {
+                field.addClass('invalid');
+                return false;
+            } else {
+                field.removeClass('invalid');
+                return true;
+            }
+        }
+    });
+</script>
 {% endblock %}

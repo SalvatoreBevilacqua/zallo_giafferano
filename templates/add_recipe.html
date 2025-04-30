@@ -1,71 +1,155 @@
 {% extends "base.html" %}
+{% block title %}Add Recipe{% endblock %}
 {% block content %}
 
+<div class="container">
     <div class="row">
-        <div class="col s12 m8 offset-m2">
+        <div class="col s12 m10 offset-m1 l8 offset-l2">
             <div class="card-panel">
-                <h3 class="center-align light-blue-text text-darken 4">
-                    Add Recipe
-                </h3>
-                <div class="row">
-                    <form class="col s12" method="POST" enctype="multipart/form-data" action="{{ url_for('add_recipe') }}">
-                        <!-- choose a dish from db -->
-                        <div class="input-field">
+                <h3 class="center-align indigo-text text-lighten-1">Add Recipe</h3>
+                
+                <form class="col s12" method="POST" action="{{ url_for('add_recipe') }}">
+                    <!-- Recipe Type Section -->
+                    <div class="row">
+                        <div class="col s12">
+                            <h5 class="indigo-text text-lighten-1">
+                                <i class="material-icons left">restaurant</i> Recipe Type
+                            </h5>
+                        </div>
+                        
+                        <div class="input-field col s12">
                             <select id="dish_name" name="dish_name" class="validate" required>
-                            <option value="" disabled selected>Choose your Dish</option>
-                            {% for dish in dish %}
-                                <option value="{{ dish.dish_name }}">{{ dish.dish_name }}</option>
-                            {% endfor %}
+                                <option value="" disabled selected>Choose your dish type</option>
+                                {% for dish in dish %}
+                                    <option value="{{ dish.dish_name }}">{{ dish.dish_name }}</option>
+                                {% endfor %}
                             </select>
+                            <label for="dish_name">Dish Type</label>
                         </div>
-                        <!-- choose the ingredients -->
-                        <div class="input-field validate" required>
+                    </div>
+                    
+                    <!-- Recipe Name Section -->
+                    <div class="row">
+                        <div class="col s12">
+                            <h5 class="indigo-text text-lighten-1">
+                                <i class="material-icons left">create</i> Recipe Details
+                            </h5>
+                        </div>
+                        
+                        <div class="input-field col s12">
+                            <i class="material-icons prefix">menu_book</i>
+                            <input id="plate_name" name="plate_name" minlength="3" maxlength="50"
+                                type="text" class="validate" required>
+                            <label for="plate_name">Recipe Name</label>
+                            <span class="helper-text" data-error="Recipe name must be between 3 and 50 characters" data-success="Great!">
+                                Give your recipe a descriptive name (3-50 characters)
+                            </span>
+                        </div>
+                        
+                        <div class="input-field col s12">
+                            <i class="material-icons prefix">insert_link</i>
+                            <input id="image" name="image" type="url" class="validate" required
+                                placeholder="https://example.com/image.jpg">
+                            <label for="image">Image URL</label>
+                            <span class="helper-text" data-error="Please enter a valid URL" data-success="Valid URL format!">
+                                Provide a URL to an image of your dish
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- Ingredients Section -->
+                    <div class="row">
+                        <div class="col s12">
+                            <h5 class="indigo-text text-lighten-1">
+                                <i class="material-icons left">kitchen</i> Ingredients
+                            </h5>
+                        </div>
+                        
+                        <div class="input-field col s12">
                             <select multiple id="ingredients" name="ingredients" class="validate" required>
-                            <option value="" disabled selected>Choose the Ingredients</option>
-                            {% for ingredients in ingredients %}
-                                    <option value="{{ ingredients.ingredients }}">{{ ingredients.ingredients }}</option>
-                            {% endfor %}
+                                <option value="" disabled>Select ingredients</option>
+                                {% for ingredient in ingredients %}
+                                    <option value="{{ ingredient.ingredient_name }}">{{ ingredient.ingredient_name }}</option>
+                                {% endfor %}
                             </select>
+                            <label for="ingredients">Ingredients</label>
+                            <span class="helper-text">
+                                Hold Ctrl/Cmd to select multiple ingredients
+                            </span>
                         </div>
-                        <!-- add image -->
-                        <div class = "row">
-                            <div class="input-field col s12">
-                                <i class="material-icons prefix">insert_link</i>
-                                <input id="image" name="image" minlength="5" maxlength="100"
-                                    type="text" class="validate" required>
-                                <label for="Image">Copy the URL image here</label>
-                            </div>
+                    </div>
+                    
+                    <!-- Preparation Section -->
+                    <div class="row">
+                        <div class="col s12">
+                            <h5 class="indigo-text text-lighten-1">
+                                <i class="material-icons left">local_dining</i> Preparation
+                            </h5>
                         </div>
-                        <!-- name of the dish -->
-                        <div class="row">
-                            <div class="input-field col s12">
-                                <i class="material-icons prefix">menu_book</i>
-                                <input id="plate_name" name="plate_name" minlength="5" maxlength="50"
-                                    type="text" class="validate" required>
-                                <label for="plate_name">Plate Name</label>
-                            </div>
+                        
+                        <div class="input-field col s12">
+                            <i class="material-icons prefix">description</i>
+                            <textarea id="preparation" name="preparation" minlength="30"
+                                class="materialize-textarea validate" required data-length="5000"></textarea>
+                            <label for="preparation">Preparation Instructions</label>
+                            <span class="helper-text" data-error="Please provide detailed instructions (at least 30 characters)" data-success="Great!">
+                                Provide detailed step-by-step instructions
+                            </span>
                         </div>
-                        <!-- preparation of the dish -->
-                        <div class="row">
-                            <div class="input-field col s12">
-                                <i class="material-icons prefix">local_dining</i>
-                                <textarea id="preparation" name="preparation" minlength="5"
-                                    maxlength="9999" class="materialize-textarea validate" required></textarea>
-                                <label for="preparation">Preparation</label>
-                            </div>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <div class="row">
+                        <div class="col s12 center-align">
+                            <button class="btn-large waves-effect waves-light indigo lighten-1" type="submit">
+                                Add Recipe
+                                <i class="material-icons right">send</i>
+                            </button>
                         </div>
-                        <!-- submit button -->
-                        <div class="row">
-                            <div class="col s12 center-align">
-                                <button class="col s12 btn-large waves-effect indigo lighten-1" type="submit">
-                                    Add Recipe<i class="material-icons right">send</i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
-        </div >
-    </div>    
+        </div>
+    </div>
+</div>
 
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        $('textarea#preparation').characterCounter();
+        
+        // Form validation visual feedback
+        $('input, textarea, select').on('blur', function() {
+            validateField($(this));
+        });
+        
+        $('form').on('submit', function(e) {
+            let isValid = true;
+            
+            // Validate all fields before submit
+            $('input, textarea, select').each(function() {
+                if (!validateField($(this))) {
+                    isValid = false;
+                }
+            });
+            
+            if (!isValid) {
+                e.preventDefault();
+                M.toast({html: 'Please correct the errors in the form', classes: 'red'})
+            }
+        });
+        
+        function validateField(field) {
+            if (field.prop('required') && !field.val()) {
+                field.addClass('invalid');
+                return false;
+            } else {
+                field.removeClass('invalid');
+                return true;
+            }
+        }
+    });
+</script>
 {% endblock %}

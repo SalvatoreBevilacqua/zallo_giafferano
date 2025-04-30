@@ -3,72 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="type/css">
+    <meta name="description" content="Zallo Giafferano - A community-driven recipe sharing platform">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" type="text/css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     {% block styles %}
     {% endblock %}
-    <title>Zallo Giafferano</title>
+    <title>Zallo Giafferano - {% block title %}Share Your Recipes{% endblock %}</title>
 </head>
 <body>
     <header>
         <!-- top navbar -->
-		<nav class="nav-extended text-shadow indigo lighten-1">
-			<div class="nav-wrapper">
-				<a href="{{ url_for('recipe') }}" class="brand-logo">Zallo Giafferano</a>
-				<a href="{{ url_for('recipe') }}" data-target="mobile-demo" class="sidenav-trigger right"> <i class="material-icons">menu</i></a>
-				<ul class="right hide-on-med-and-down">
-					<li><a href="{{ url_for('recipe') }}" class="nav-h">Recipe</a></li>
-                    {% if session.user %}
-                        <li><a href="{{ url_for('add_recipe') }}" class="nav-h">Add Recipe</a></li>
-                        <li><a href="{{ url_for('profile', username=session['user']) }}" class="nav-h">Profile</a></li>
-                        <li><a href="{{ url_for('logout') }}" class="nav-h">Log Out</a></li>
-                    {% else %}
-                        <li><a href="{{ url_for('login') }}" class="nav-h">Log In</a></li>
-                        <li><a href="{{ url_for('register') }}" class="nav-h">Register</a></li>
-                    {% endif %}
-				</ul>
-			</div>
-		</nav>
+        <div class="navbar-fixed">
+            <nav class="nav-extended text-shadow indigo lighten-1">
+                <div class="nav-wrapper container">
+                    <a href="{{ url_for('home') }}" class="brand-logo">Zallo Giafferano</a>
+                    <a href="#" data-target="mobile-demo" class="sidenav-trigger right"><i class="material-icons">menu</i></a>
+                    <ul class="right hide-on-med-and-down">
+                        <li><a href="{{ url_for('home') }}"><i class="material-icons left">home</i>Home</a></li>
+                        <li><a href="{{ url_for('recipe') }}"><i class="material-icons left">restaurant_menu</i>Recipes</a></li>
+                        {% if session.user %}
+                            <li><a href="{{ url_for('add_recipe') }}"><i class="material-icons left">add</i>Add Recipe</a></li>
+                            <li><a href="{{ url_for('profile', username=session['user']) }}"><i class="material-icons left">person</i>Profile</a></li>
+                            {% if session.user|lower == "admin"|lower %}
+                                <li><a class="dropdown-trigger" href="#!" data-target="dropdown-admin">
+                                    <i class="material-icons left">settings</i>Admin<i class="material-icons right">arrow_drop_down</i>
+                                </a></li>
+                                <!-- Dropdown Structure -->
+                                <ul id="dropdown-admin" class="dropdown-content">
+                                    <li><a href="{{ url_for('manage_ingredients') }}">Manage Ingredients</a></li>
+                                    <li><a href="{{ url_for('manage_categories') }}">Manage Categories</a></li>
+                                </ul>
+                            {% endif %}
+                            <li><a href="{{ url_for('logout') }}"><i class="material-icons left">exit_to_app</i>Log Out</a></li>
+                        {% else %}
+                            <li><a href="{{ url_for('login') }}"><i class="material-icons left">login</i>Log In</a></li>
+                            <li><a href="{{ url_for('register') }}"><i class="material-icons left">person_add</i>Register</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </nav>
+        </div>
 
         <!-- mobile sidenav -->
-		<ul class="sidenav card-panel indigo lighten-1" id="mobile-demo">
-            <li><h4 class="center-align amber-text text-accent-3">Zallo Giafferano</h4></li>
-            <li><a href="{{ url_for('recipe') }}">Recipe</a></li>
+        <ul class="sidenav indigo lighten-1" id="mobile-demo">
+            <li>
+                <div class="user-view">
+                    <div class="background">
+                        <img src="https://images.unsplash.com/photo-1495195134817-aeb325a55b65?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80" alt="Background image">
+                    </div>
+                    <a href="{{ url_for('home') }}"><span class="white-text name">Zallo Giafferano</span></a>
+                    {% if session.user %}
+                        <a href="{{ url_for('profile', username=session['user']) }}"><span class="white-text email">{{ session.user }}</span></a>
+                    {% else %}
+                        <a href="{{ url_for('login') }}"><span class="white-text email">Guest</span></a>
+                    {% endif %}
+                </div>
+            </li>
+            <li><a href="{{ url_for('home') }}" class="white-text"><i class="material-icons white-text">home</i>Home</a></li>
+            <li><a href="{{ url_for('recipe') }}" class="white-text"><i class="material-icons white-text">restaurant_menu</i>Recipes</a></li>
             {% if session.user %}
-                <li><a href="{{ url_for('add_recipe') }}">Add Recipe</a></li>
-                <li><a href="{{ url_for('profile', username=session['user']) }}">Profile</a></li>
-                <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+                <li><a href="{{ url_for('add_recipe') }}" class="white-text"><i class="material-icons white-text">add</i>Add Recipe</a></li>
+                <li><a href="{{ url_for('profile', username=session['user']) }}" class="white-text"><i class="material-icons white-text">person</i>Profile</a></li>
+                {% if session.user|lower == "admin"|lower %}
+                    <li><div class="divider"></div></li>
+                    <li><a class="subheader white-text">Admin</a></li>
+                    <li><a href="{{ url_for('manage_ingredients') }}" class="white-text"><i class="material-icons white-text">kitchen</i>Manage Ingredients</a></li>
+                    <li><a href="{{ url_for('manage_categories') }}" class="white-text"><i class="material-icons white-text">category</i>Manage Categories</a></li>
+                {% endif %}
+                <li><div class="divider"></div></li>
+                <li><a href="{{ url_for('logout') }}" class="white-text"><i class="material-icons white-text">exit_to_app</i>Log Out</a></li>
             {% else %}
-                <li><a href="{{ url_for('login') }}">Log In</a></li>
-                <li><a href="{{ url_for('register') }}">Register</a></li>
+                <li><a href="{{ url_for('login') }}" class="white-text"><i class="material-icons white-text">login</i>Log In</a></li>
+                <li><a href="{{ url_for('register') }}" class="white-text"><i class="material-icons white-text">person_add</i>Register</a></li>
             {% endif %}
-		</ul>
-	</header>
+        </ul>
+    </header>
 
     <section>
         <!-- Flash Messages -->
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 {% for message in messages %}
-                    <div id="fMessage" class="row flashes">
-                        <h5 class="center-align">{{ message }}</h5>
+                    <div class="row flashes">
+                        <div class="col s12 m8 offset-m2">
+                            <div id="fMessage" class="card-panel amber lighten-4">
+                                <span class="center-align">
+                                    <i class="material-icons left">info</i>
+                                    {{ message }}
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 {% endfor %}
             {% endif %}
         {% endwith %}
     </section>
 
-    <main class="container">
+    <main>
         {% block content %}
         {% endblock %}
     </main>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <footer class="page-footer indigo lighten-1">
+        <div class="container">
+            <div class="row">
+                <div class="col s12 l6">
+                    <h5 class="white-text">Zallo Giafferano</h5>
+                    <p class="grey-text text-lighten-4">A community-driven recipe sharing platform where cooking enthusiasts can share their favorite recipes with others.</p>
+                </div>
+                <div class="col s12 l4 offset-l2">
+                    <h5 class="white-text">Links</h5>
+                    <ul>
+                        <li><a class="grey-text text-lighten-3" href="{{ url_for('home') }}">Home</a></li>
+                        <li><a class="grey-text text-lighten-3" href="{{ url_for('recipe') }}">Recipes</a></li>
+                        {% if session.user %}
+                            <li><a class="grey-text text-lighten-3" href="{{ url_for('profile', username=session['user']) }}">Profile</a></li>
+                        {% else %}
+                            <li><a class="grey-text text-lighten-3" href="{{ url_for('login') }}">Log In</a></li>
+                            <li><a class="grey-text text-lighten-3" href="{{ url_for('register') }}">Register</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <div class="container">
+                © 2023 Zallo Giafferano
+                <a class="grey-text text-lighten-4 right" href="#!">GitHub</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     {% block scripts %}
     {% endblock %}
 </body>
 </html>
+<!--

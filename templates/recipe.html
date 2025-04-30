@@ -1,63 +1,222 @@
 {% extends "base.html" %}
+{% block title %}All Recipes{% endblock %}
 {% block content %}
 
-    <h3 class="light-blue-text text-darken-4 center-align">All Recipes</h3>
+<div class="container">
+    <div class="row">
+        <div class="col s12 center-align">
+            <h3 class="indigo-text text-lighten-1">
+                {% if category %}
+                    {{ category }} Recipes
+                {% elif search_query %}
+                    Search Results for "{{ search_query }}"
+                {% else %}
+                    All Recipes
+                {% endif %}
+            </h3>
+        </div>
+    </div>
 
-    <div>
-        <form action="{{ url_for('search') }}" method="post" class="col12 m8 offset-m2">
-            <div class="row center-align">
+    <!-- Search Section -->
+    <div class="row card-panel">
+        <form action="{{ url_for('search') }}" method="post" class="col s12">
+            <div class="row valign-wrapper">
                 <div class="input-field col s12 m8">
-                    <i class="material-icons prefix">folder_open</i>
-                    <input type="text" name="query" id="query" minlength="3" class="validate" required>
-                    <label for="query">Search for the Name or by the Ingredients</label>
+                    <i class="material-icons prefix">search</i>
+                    <input type="text" name="query" id="query" minlength="2" class="validate" required>
+                    <label for="query">Search for recipe name or ingredients</label>
                 </div>
-                <div class="col s12 m4">
-                    <a href="{{ url_for('recipe') }}" class="red btn text-shadow">Reset</a>
-                    <button type="submit" class="light-blue darken-1 btn text-shadow">
-                        <i class="material-icons right">search</i> Search
+                <div class="col s12 m4 center-align">
+                    <button type="submit" class="btn waves-effect waves-light indigo lighten-1">
+                        Search <i class="material-icons right">search</i>
                     </button>
+                    <a href="{{ url_for('recipe') }}" class="btn waves-effect waves-light red">
+                        Reset <i class="material-icons right">clear</i>
+                    </a>
                 </div>
             </div>
         </form>
     </div>
-    <br/>
 
+    <!-- Categories Filter -->
+    <div class="row">
+        <div class="col s12">
+            <div class="chip-container">
+                <a href="{{ url_for('recipe') }}" class="chip {% if not category %}indigo lighten-1 white-text{% endif %}">
+                    All
+                </a>
+                {% for dish in dishes %}
+                    <a href="{{ url_for('filter_recipes', category=dish.dish_name) }}" 
+                       class="chip {% if category == dish.dish_name %}indigo lighten-1 white-text{% endif %}">
+                        {{ dish.dish_name }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Recipes Display -->
     {% if recipe|length > 0 %}
-    <div class="container-fluid">
-        <div class="row">
+        <div class="row recipes-container">
             {% for recipe in recipe %}
-                <div class="col m4 sm6">
-                    <div class="card">
+                <div class="col s12 m6 l4">
+                    <div class="card hoverable recipe-card">
                         <div class="card-image">
-                            <img style="height: 190px;" src="{{ recipe.image }}">
+                            <img src="{{ recipe.image }}" alt="{{ recipe.plate_name }}" class="responsive-img recipe-img">
+                            <span class="card-title text-shadow">{{ recipe.plate_name }}</span>
+                            {% if session.user %}
+                                <a href="{{ url_for('like_recipe', recipe_id=recipe._id) }}" 
+                                   class="btn-floating halfway-fab waves-effect waves-light amber darken-2">
+                                    <i class="material-icons">thumb_up</i>
+                                </a>
+                            {% endif %}
                         </div>
-                        <div class="card-content card-content-h">
+                        <div class="card-content">
+                            <div class="recipe-meta">
+                                <span><i class="material-icons amber-text text-darken-2">restaurant</i> {{ recipe.dish_name }}</span>
+                                <span><i class="material-icons amber-text text-darken-2">thumb_up</i> {{ recipe.likes|default(0) }}</span>
+                            </div>
+                            <p class="truncate">by: <a href="{{ url_for('profile', username=recipe.created_by) }}">{{ recipe.created_by }}</a></p>
                             <p>
-                            <strong>{{ recipe.plate_name }}</strong>
+                                <strong>Ingredients:</strong> 
+                                <span class="truncate">{{ recipe.ingredients|join(', ') }}</span>
                             </p>
-                            <p><em>by: {{ recipe.created_by }}</em></p>
                         </div>
-                        <!-- read recipe -->
                         <div class="card-action center-align">
-                            <a href="#modal{{ recipe._id }}" class="modal-trigger" style="margin: 0">Read the Recipe</a>
-                        </div>
-                        <div id="modal{{ recipe._id }}"class="modal">
-                            <div class="modal-content">
-                            <h4>{{ recipe.plate_name }}</h4>
-                            <h6>Ingredients: {{ recipe.ingredients }}</h6>
-                            <p>{{ recipe.preparation }}</p>
-                            </div>
-                            <div class="modal-footer">
-                            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
-                            </div>
+                            <a href="#modal{{ recipe._id }}" class="modal-trigger">View Recipe</a>
+                            {% if session.user|lower == recipe.created_by|lower or session.user|lower == "admin"|lower %}
+                                <a href="{{ url_for('edit_recipe', recipe_id=recipe._id) }}">
+                                    <i class="material-icons indigo-text text-lighten-1">edit</i>
+                                </a>
+                                <a href="#delete-modal{{ recipe._id }}" class="modal-trigger">
+                                    <i class="material-icons red-text">delete</i>
+                                </a>
+                            {% endif %}
                         </div>
                     </div>
+
+                    <!-- Recipe Modal -->
+                    <div id="modal{{ recipe._id }}" class="modal modal-fixed-footer">
+                        <div class="modal-content">
+                            <h4>{{ recipe.plate_name }}</h4>
+                            <div class="row">
+                                <div class="col s12 m4">
+                                    <img src="{{ recipe.image }}" alt="{{ recipe.plate_name }}" class="responsive-img materialboxed">
+                                    <p class="center-align">
+                                        <span class="chip">
+                                            <i class="material-icons">restaurant</i>
+                                            {{ recipe.dish_name }}
+                                        </span>
+                                        <span class="chip">
+                                            <i class="material-icons">thumb_up</i>
+                                            {{ recipe.likes|default(0) }} likes
+                                        </span>
+                                    </p>
+                                    <p class="center-align">by: <a href="{{ url_for('profile', username=recipe.created_by) }}">{{ recipe.created_by }}</a></p>
+                                </div>
+                                <div class="col s12 m8">
+                                    <h5>Ingredients:</h5>
+                                    <ul class="collection">
+                                        {% for ingredient in recipe.ingredients %}
+                                            <li class="collection-item">{{ ingredient }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col s12">
+                                    <h5>Preparation:</h5>
+                                    <p class="flow-text">{{ recipe.preparation }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            {% if session.user %}
+                                <a href="{{ url_for('like_recipe', recipe_id=recipe._id) }}" 
+                                   class="modal-close waves-effect waves-light btn-flat amber-text text-darken-2">
+                                    <i class="material-icons left">thumb_up</i>Like
+                                </a>
+                            {% endif %}
+                            <a href="#!" class="modal-close waves-effect waves-light btn-flat">Close</a>
+                        </div>
+                    </div>
+
+                    <!-- Delete Confirmation Modal -->
+                    {% if session.user|lower == recipe.created_by|lower or session.user|lower == "admin"|lower %}
+                        <div id="delete-modal{{ recipe._id }}" class="modal">
+                            <div class="modal-content">
+                                <h4>Confirm Deletion</h4>
+                                <p>Are you sure you want to delete the recipe "{{ recipe.plate_name }}"?</p>
+                                <p>This action cannot be undone.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancel</a>
+                                <a href="{{ url_for('delete_recipe', recipe_id=recipe._id) }}" 
+                                   class="waves-effect waves-light btn red">
+                                    Delete <i class="material-icons right">delete</i>
+                                </a>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             {% endfor %}
         </div>
-    </div>
-    {% else %}
-        <h3 class="red-text text-darken-4 center-align">No Results Found</h3>
-    {% endif %}
 
- {% endblock %}
+        <!-- Pagination -->
+        {% if total_pages > 1 %}
+            <div class="row">
+                <div class="col s12 center-align">
+                    <ul class="pagination">
+                        {% if current_page > 1 %}
+                            <li><a href="{{ url_for('recipe', page=current_page-1) }}"><i class="material-icons">chevron_left</i></a></li>
+                        {% else %}
+                            <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+                        {% endif %}
+
+                        {% for page_num in range(1, total_pages + 1) %}
+                            {% if page_num == current_page %}
+                                <li class="active indigo lighten-1"><a href="#!">{{ page_num }}</a></li>
+                            {% else %}
+                                <li class="waves-effect"><a href="{{ url_for('recipe', page=page_num) }}">{{ page_num }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if current_page < total_pages %}
+                            <li class="waves-effect"><a href="{{ url_for('recipe', page=current_page+1) }}"><i class="material-icons">chevron_right</i></a></li>
+                        {% else %}
+                            <li class="disabled"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="row">
+            <div class="col s12 center-align">
+                <div class="card-panel red lighten-4">
+                    <h5>No Recipes Found</h5>
+                    <p>Try different search criteria or add your own recipe!</p>
+                    {% if session.user %}
+                        <a href="{{ url_for('add_recipe') }}" class="btn indigo lighten-1 waves-effect waves-light">
+                            Add Recipe <i class="material-icons right">add</i>
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('login') }}" class="btn indigo lighten-1 waves-effect waves-light">
+                            Log In to Add Recipes <i class="material-icons right">person</i>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function(){
+        $('.materialboxed').materialbox();
+    });
+</script>
+{% endblock %}

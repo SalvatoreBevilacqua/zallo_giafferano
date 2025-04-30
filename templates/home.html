@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="parallax-container" style="height: 400px;">
+        <div class="parallax">
+            <img src="https://images.unsplash.com/photo-1495195134817-aeb325a55b65?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80" alt="Food background">
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col s12 center-align">
+                    <h1 class="white-text text-shadow">Zallo Giafferano</h1>
+                    <h4 class="white-text text-shadow">Share your favorite cooking recipes</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12 center-align">
+                    <a href="{{ url_for('recipe') }}" class="btn-large amber darken-2 waves-effect waves-light">
+                        Browse Recipes
+                        <i class="material-icons right">restaurant_menu</i>
+                    </a>
+                    {% if session.user %}
+                    <a href="{{ url_for('add_recipe') }}" class="btn-large indigo lighten-1 waves-effect waves-light">
+                        Add Recipe
+                        <i class="material-icons right">add</i>
+                    </a>
+                    {% else %}
+                    <a href="{{ url_for('login') }}" class="btn-large indigo lighten-1 waves-effect waves-light">
+                        Log In
+                        <i class="material-icons right">person</i>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Featured Section -->
+<div class="container">
+    <div class="row">
+        <div class="col s12 center-align">
+            <h3 class="indigo-text text-lighten-1">Featured Recipes</h3>
+            <p class="flow-text">Check out our latest and most popular recipes</p>
+        </div>
+    </div>
+
+    <div class="row">
+        {% if featured_recipes|length > 0 %}
+            {% for recipe in featured_recipes %}
+                <div class="col s12 m4">
+                    <div class="card hoverable">
+                        <div class="card-image waves-effect waves-block waves-light">
+                            <img class="activator" src="{{ recipe.image }}" alt="{{ recipe.plate_name }}" style="height: 200px; object-fit: cover;">
+                        </div>
+                        <div class="card-content">
+                            <span class="card-title activator grey-text text-darken-4 truncate">
+                                {{ recipe.plate_name }}
+                                <i class="material-icons right">more_vert</i>
+                            </span>
+                            <p><em>by: {{ recipe.created_by }}</em></p>
+                            <p>
+                                <i class="material-icons amber-text">star</i>
+                                {{ recipe.likes|default(0) }} likes
+                            </p>
+                        </div>
+                        <div class="card-reveal">
+                            <span class="card-title grey-text text-darken-4">
+                                {{ recipe.plate_name }}
+                                <i class="material-icons right">close</i>
+                            </span>
+                            <p><strong>Dish type:</strong> {{ recipe.dish_name }}</p>
+                            <p><strong>Ingredients:</strong></p>
+                            <ul>
+                                {% for ingredient in recipe.ingredients %}
+                                    <li>{{ ingredient }}</li>
+                                {% endfor %}
+                            </ul>
+                            <a href="#modal{{ recipe._id }}" class="modal-trigger btn indigo lighten-1">
+                                Read Full Recipe
+                            </a>
+                        </div>
+                        <div class="card-action">
+                            <a href="#modal{{ recipe._id }}" class="modal-trigger">Read Recipe</a>
+                            {% if session.user %}
+                                <a href="{{ url_for('like_recipe', recipe_id=recipe._id) }}" class="right">
+                                    <i class="material-icons amber-text">thumb_up</i>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <!-- Modal Structure -->
+                    <div id="modal{{ recipe._id }}" class="modal">
+                        <div class="modal-content">
+                            <h4>{{ recipe.plate_name }}</h4>
+                            <div class="row">
+                                <div class="col s12 m4">
+                                    <img src="{{ recipe.image }}" alt="{{ recipe.plate_name }}" class="responsive-img">
+                                </div>
+                                <div class="col s12 m8">
+                                    <p><strong>Dish type:</strong> {{ recipe.dish_name }}</p>
+                                    <p><strong>Ingredients:</strong></p>
+                                    <ul>
+                                        {% for ingredient in recipe.ingredients %}
+                                            <li>{{ ingredient }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col s12">
+                                    <p><strong>Preparation:</strong></p>
+                                    <p>{{ recipe.preparation }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col s12 center-align">
+                <p>No featured recipes found.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Categories Section -->
+<div class="section amber lighten-5">
+    <div class="container">
+        <div class="row">
+            <div class="col s12 center-align">
+                <h3 class="indigo-text text-lighten-1">Browse by Category</h3>
+                <p class="flow-text">Find recipes by dish type</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            {% if categories|length > 0 %}
+                {% for category in categories %}
+                    <div class="col s12 m6 l3">
+                        <div class="card hoverable">
+                            <div class="card-content center-align">
+                                <span class="card-title">{{ category.dish_name }}</span>
+                                {% if category.description %}
+                                    <p>{{ category.description }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="card-action center-align">
+                                <a href="{{ url_for('filter_recipes', category=category.dish_name) }}" class="btn indigo lighten-1">View Recipes</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col s12 center-align">
+                    <p>No categories found.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- About Section -->
+<div class="container">
+    <div class="row">
+        <div class="col s12 center-align">
+            <h3 class="indigo-text text-lighten-1">About Zallo Giafferano</h3>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col s12 m8 offset-m2">
+            <div class="card-panel">
+                <p class="flow-text">
+                    Zallo Giafferano is a community-driven recipe sharing platform where cooking enthusiasts can share their 
+                    favorite recipes with others. Whether you're a professional chef or a home cook, you can contribute 
+                    your culinary creations to our growing collection.
+                </p>
+                <p>
+                    Our mission is to create a diverse library of recipes from around the world, making cooking more 
+                    accessible and enjoyable for everyone. Join our community today to share your recipes or discover 
+                    new dishes to try at home!
+                </p>
+                
+                {% if not session.user %}
+                    <div class="center-align">
+                        <a href="{{ url_for('register') }}" class="btn-large amber darken-2 waves-effect waves-light">
+                            Join Now
+                            <i class="material-icons right">person_add</i>
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+    $(document).ready(function(){
+        $('.parallax').parallax();
+    });
+</script>
+{% endblock %}
+
+{% endblock %}

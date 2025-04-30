@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block title %}Manage Ingredients{% endblock %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col s12 center-align">
+            <h3 class="indigo-text text-lighten-1">Manage Ingredients</h3>
+            <a href="{{ url_for('add_ingredient') }}" class="btn-large waves-effect waves-light indigo lighten-1">
+                <i class="material-icons left">add</i>Add New Ingredient
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s12">
+            <div class="card">
+                <div class="card-content">
+                    {% if ingredients|length > 0 %}
+                        <!-- Search/Filter Box -->
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <i class="material-icons prefix">search</i>
+                                <input type="text" id="ingredient-search" onkeyup="filterIngredients()" placeholder="Search for ingredients...">
+                                <label for="ingredient-search">Search Ingredients</label>
+                            </div>
+                        </div>
+
+                        <!-- Category Filters -->
+                        <div class="row">
+                            <div class="col s12">
+                                <div class="chip-container">
+                                    <a href="#!" class="chip filter-chip active" onclick="filterByCategory('all')">All</a>
+                                    {% set categories = [] %}
+                                    {% for ingredient in ingredients %}
+                                        {% if ingredient.category and ingredient.category not in categories %}
+                                            {% set categories = categories.append(ingredient.category) or categories %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% for category in categories %}
+                                        <a href="#!" class="chip filter-chip" onclick="filterByCategory('{{ category }}')">{{ category }}</a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ingredients Table -->
+                        <table class="responsive-table highlight ingredients-table">
+                            <thead>
+                                <tr>
+                                    <th>Ingredient Name</th>
+                                    <th>Category</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for ingredient in ingredients %}
+                                    <tr data-category="{{ ingredient.category|lower }}">
+                                        <td>{{ ingredient.ingredient_name }}</td>
+                                        <td>{{ ingredient.category if ingredient.category else "Uncategorized" }}</td>
+                                        <td class="actions-cell">
+                                            <a href="{{ url_for('edit_ingredient', ingredient_id=ingredient._id) }}" class="btn-small indigo lighten-1">
+                                                <i class="material-icons">edit</i>
+                                            </a>
+                                            <a href="#delete-modal-{{ ingredient._id }}" class="btn-small red modal-trigger">
+                                                <i class="material-icons">delete</i>
+                                            </a>
+                                            
+                                            <!-- Delete Confirmation Modal -->
+                                            <div id="delete-modal-{{ ingredient._id }}" class="modal">
+                                                <div class="modal-content">
+                                                    <h4>Confirm Deletion</h4>
+                                                    <p>Are you sure you want to delete the ingredient "{{ ingredient.ingredient_name }}"?</p>
+                                                    <p class="red-text">Warning: This may affect recipes that use this ingredient.</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancel</a>
+                                                    <a href="{{ url_for('delete_ingredient', ingredient_id=ingredient._id) }}" class="waves-effect waves-light btn red">
+                                                        Delete
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="center-align">
+                            <p>No ingredients found in the database.</p>
+                            <p>Start by adding some ingredients!</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function(){
+        $('.modal').modal();
+    });
+    
+    // Filter ingredients by name
+    function filterIngredients() {
+        let input = document.getElementById('ingredient-search');
+        let filter = input.value.toUpperCase();
+        let table = document.querySelector('.ingredients-table');
+        let tr = table.getElementsByTagName('tr');
+        
+        for (let i = 1; i < tr.length; i++) { // Start from 1 to skip header
+            let td = tr[i].getElementsByTagName('td')[0]; // Ingredient name column
+            if (td) {
+                let txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    if (!tr[i].classList.contains('category-hidden')) {
+                        tr[i].style.display = '';
+                    }
+                } else {
+                    tr[i].style.display = 'none';
+                }
+            }
+        }
+    }
+    
+    // Filter by category
+    function filterByCategory(category) {
+        // Update active chip
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.classList.remove('active');
+        });
+        event.target.classList.add('active');
+        
+        let table = document.querySelector('.ingredients-table');
+        let tr = table.getElementsByTagName('tr');
+        
+        for (let i = 1; i < tr.length; i++) { // Start from 1 to skip header
+            if (category === 'all') {
+                tr[i].classList.remove('category-hidden');
+                if (!document.getElementById('ingredient-search').value) {
+                    tr[i].style.display = '';
+                }
+            } else {
+                let categoryValue = tr[i].getAttribute('data-category');
+                if (categoryValue && categoryValue.toLowerCase() === category.toLowerCase()) {
+                    tr[i].classList.remove('category-hidden');
+                    if (!document.getElementById('ingredient-search').value) {
+                        tr[i].style.display = '';
+                    }
+                } else {
+                    tr[i].classList.add('category-hidden');
+                    tr[i].style.display = 'none';
+                }
+            }
+        }
+    }
+</script>
+{% endblock %}
