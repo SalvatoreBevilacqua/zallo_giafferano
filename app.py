@@ -555,6 +555,6 @@ def delete_category(category_id):
 
 
 if __name__ == "__main__":
-    app.run(host=os.environ.get("IP"),
-            port=int(os.environ.get("PORT")),
-            debug=False)  # Set to False for production
+    app.run(host=os.environ.get("IP", "0.0.0.0"),
+            port=int(os.environ.get("PORT", "5000")),
+            debug=True)  # Imposta a True per lo sviluppo, False per la produzione
