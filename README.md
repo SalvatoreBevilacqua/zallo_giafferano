@@ -1,42 +1,48 @@
 # Zallo Giafferano - Recipe Sharing Platform
 
-Zallo Giafferano is a community-driven recipe sharing platform built with Flask and MongoDB. It allows users to create, share, and discover cooking recipes from around the world.
+Zallo Giafferano is a community-driven recipe sharing platform I built using Flask and MongoDB. This application allows users to create, share, and discover cooking recipes from around the world.
 
 ![Zallo Giafferano Screenshot](https://images.unsplash.com/photo-1495195134817-aeb325a55b65?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80)
 
-## Features
+## Disclaimer
 
-* **User Authentication**: Register, login, and logout functionality  
-* **CRUD Operations**: Create, read, update, and delete recipes  
-* **Recipe Management**: Browse recipes with pagination and filtering  
-* **Search Functionality**: Search recipes by name or ingredients  
-* **User Profiles**: Personalized profiles with user statistics  
-* **Like System**: Users can like recipes  
-* **Admin Panel**: Manage ingredients and recipe categories  
-* **Responsive Design**: Works on mobile and desktop devices
+This project, "Zallo Giafferano," is a portfolio piece created solely for educational purposes and to demonstrate my web development skills. It is not a commercial product and is not affiliated with or endorsed by any existing recipe websites or brands. All content is fictional and created for demonstration purposes only. This application is not intended for commercial use.
+
+## Features I Implemented
+
+* **User Authentication**: Complete register, login, and logout system with secure password hashing
+* **CRUD Operations**: Full create, read, update, and delete functionality for recipes
+* **Recipe Management**: Browse recipes with pagination and filtering by category
+* **Search Functionality**: Search recipes by name or ingredients
+* **User Profiles**: Personalized profiles with user statistics and recipe collections
+* **Like System**: Interactive like functionality for recipes
+* **Admin Panel**: Administrative tools to manage ingredients and recipe categories
+* **Responsive Design**: Mobile-first approach that works across all devices
 
 ## Technology Stack
 
-* **Backend**: Python, Flask  
-* **Database**: MongoDB  
-* **Frontend**: HTML, CSS, JavaScript  
-* **UI Framework**: Materialize CSS  
-* **Authentication**: Werkzeug Security  
-* **Additional Libraries**: jQuery, Font Awesome
+As a full-stack developer, I utilized:
+
+* **Backend**: Python with Flask framework for routing and request handling
+* **Database**: MongoDB for a flexible, document-based data storage
+* **Frontend**: HTML5, CSS3, and JavaScript for a responsive user interface
+* **UI Framework**: Materialize CSS for modern, responsive components
+* **Authentication**: Werkzeug Security for password hashing and verification
+* **Additional Libraries**: jQuery for DOM manipulation, Font Awesome for icons
 
 ## Local Development Setup
 
 ### Prerequisites
 
-* Python 3.6 or higher  
-* MongoDB running on localhost:27017  
+* Python 3.6 or higher
+* MongoDB running on localhost:27017
 * Git
 
 ### Installation
 
 1. Clone the repository:
    ```bash
-   git clone <your-repository-url>
+   git clone https://github.com/your-username/zallo-giafferano.git
    cd zallo-giafferano
    ```
 
@@ -66,7 +72,7 @@ Zallo Giafferano is a community-driven recipe sharing platform built with Flask 
 
 ```
 zallo-giafferano/
-├── app.py                # Main application file
+├── app.py                # Main application file with routes and logic
 ├── init_database.py      # Database initialization script
 ├── requirements.txt      # Python dependencies
 ├── static/               # Static files (CSS, JS)
@@ -74,7 +80,7 @@ zallo-giafferano/
 │   │   └── style.css
 │   └── js/
 │       └── script.js
-└── templates/            # HTML templates
+└── templates/            # HTML templates using Jinja2
     ├── add_category.html
     ├── add_ingredient.html
     ├── add_recipe.html
