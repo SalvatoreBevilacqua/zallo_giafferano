@@ -1,90 +1,125 @@
-# Zallo Giafferano - Recipe Sharing Platform
+# 📚 Zallo Giafferano - Recipe Sharing Platform
 
-Zallo Giafferano is a community-driven recipe sharing platform I built using Flask and MongoDB. This application allows users to create, share, and discover cooking recipes from around the world.
+> A community-driven Flask application where cooking enthusiasts can share and discover recipes from around the world.
 
-![Zallo Giafferano Screenshot](https://images.unsplash.com/photo-1495195134817-aeb325a55b65?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80)
+![License](https://img.shields.io/badge/license-MIT-blue)
+![Python Version](https://img.shields.io/badge/Python-3.6+-blue)
+![Flask Version](https://img.shields.io/badge/Flask-2.2.0+-green)
+![MongoDB](https://img.shields.io/badge/MongoDB-4.3.0+-green)
+![Deployment](https://img.shields.io/badge/Deployment-Heroku-purple?logo=heroku)
 
-## Disclaimer
+![Screenshot](https://images.unsplash.com/photo-1495195134817-aeb325a55b65?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80)
 
-This project, "Zallo Giafferano," is a portfolio piece created solely for educational purposes and to demonstrate my web development skills. It is not a commercial product and is not affiliated with or endorsed by any existing recipe websites or brands. All content is fictional and created for demonstration purposes only. This application is not intended for commercial use.
+---
 
-## Features I Implemented
+## 🚀 Features
 
-* **User Authentication**: Complete register, login, and logout system with secure password hashing
-* **CRUD Operations**: Full create, read, update, and delete functionality for recipes
-* **Recipe Management**: Browse recipes with pagination and filtering by category
-* **Search Functionality**: Search recipes by name or ingredients
-* **User Profiles**: Personalized profiles with user statistics and recipe collections
-* **Like System**: Interactive like functionality for recipes
-* **Admin Panel**: Administrative tools to manage ingredients and recipe categories
-* **Responsive Design**: Mobile-first approach that works across all devices
+- **User Authentication**: Secure register, login, and logout system with password hashing
+- **Recipe Management**: Create, read, update, and delete functionality for recipes with image support
+- **Browsing & Filtering**: Browse recipes with pagination and filter by category
+- **Search Functionality**: Search recipes by name or ingredients
+- **User Profiles**: Personalized profiles with statistics and recipe collections
+- **Like System**: Interactive like functionality for recipes
+- **Admin Panel**: Administrative tools to manage ingredients and recipe categories
+- **Responsive Design**: Mobile-first approach that works across all devices
 
-## Technology Stack
+---
 
-As a full-stack developer, I utilized:
+## 🛠️ Tech Stack
 
-* **Backend**: Python with Flask framework for routing and request handling
-* **Database**: MongoDB for a flexible, document-based data storage
-* **Frontend**: HTML5, CSS3, and JavaScript for a responsive user interface
-* **UI Framework**: Materialize CSS for modern, responsive components
-* **Authentication**: Werkzeug Security for password hashing and verification
-* **Additional Libraries**: jQuery for DOM manipulation, Font Awesome for icons
+| Layer       | Technologies                                |
+|-------------|---------------------------------------------|
+| **Backend** | Python, Flask, Werkzeug Security            |
+| **Frontend**| HTML5, CSS3, JavaScript, Materialize CSS    |
+| **Database**| MongoDB with PyMongo                        |
+| **Auth**    | Session-based with password hashing         |
+| **Tools**   | jQuery, Materialize CSS, Font Awesome       |
 
-## Local Development Setup
+---
 
-### Prerequisites
+## 📦 Installation & Setup
 
-* Python 3.6 or higher
-* MongoDB running on localhost:27017
-* Git
+```bash
+# Clone the repository
+git clone https://github.com/your-username/zallo-giafferano.git
+cd zallo-giafferano
 
-### Installation
+# Create and activate a virtual environment
+python -m venv venv
+source venv/bin/activate  # or venv\Scripts\activate on Windows
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/zallo-giafferano.git
-   cd zallo-giafferano
-   ```
+# Install dependencies
+pip install -r requirements.txt
 
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+# Initialize the database with sample data
+python init_database.py
 
-3. Initialize the database with sample data:
-   ```bash
-   python init_database.py
-   ```
+# Run the application
+python app.py
+```
 
-4. Run the application:
-   ```bash
-   python app.py
-   ```
+### 🔐 Environment Variables
 
-5. Access the application at `http://localhost:5000`
+Create an `env.py` file in the root directory (this file is gitignored):
 
-### Demo Admin Account
+```python
+import os
 
-* Username: admin  
-* Password: admin
+# Flask config
+os.environ.setdefault("IP", "0.0.0.0")
+os.environ.setdefault("PORT", "5000")
+os.environ.setdefault("SECRET_KEY", "your_secret_key")
 
-## Project Structure
+# Database config
+os.environ.setdefault("MONGO_URI", "mongodb://localhost:27017/zallo_giafferano")
+```
+
+---
+
+## 🔄 Database Initialization
+
+The `init_database.py` script creates the necessary collections and adds sample data:
+
+- Dish categories (Appetizers, Main Course, Desserts, etc.)
+- Common ingredients
+- Admin user account
+
+Run the script to initialize your database:
+
+```bash
+python init_database.py
+```
+
+---
+
+## 👤 User Roles & Credentials
+
+| Role   | Username | Password |
+|--------|----------|----------|
+| Admin  | admin    | admin    |
+
+---
+
+## 📁 Project Structure
 
 ```
 zallo-giafferano/
-├── app.py                # Main application file with routes and logic
-├── init_database.py      # Database initialization script
-├── requirements.txt      # Python dependencies
-├── static/               # Static files (CSS, JS)
+├── app.py                 # Main application file with routes and logic
+├── init_database.py       # Database initialization script
+├── requirements.txt       # Python dependencies
+├── Procfile               # Heroku deployment configuration
+├── static/                # Static files (CSS, JS)
 │   ├── css/
 │   │   └── style.css
 │   └── js/
 │       └── script.js
-└── templates/            # HTML templates using Jinja2
+└── templates/             # HTML templates using Jinja2
     ├── add_category.html
     ├── add_ingredient.html
     ├── add_recipe.html
     ├── base.html
+    ├── edit_category.html
+    ├── edit_ingredient.html
     ├── edit_recipe.html
     ├── home.html
     ├── login.html
@@ -95,68 +130,73 @@ zallo-giafferano/
     └── register.html
 ```
 
-## Features in Detail
+---
 
-### Recipe Management
+## 🧪 Testing
 
-Users can browse, search, and filter recipes by category. Each recipe displays:
-- Recipe name and image
-- Creator information
-- Category and like count
-- Ingredients list
-- Preparation instructions
+Tested on:
 
-### User Profiles
+- ✅ Desktop: Chrome, Firefox, Safari
+- ✅ Mobile: Chrome (Android), Safari (iOS)
+- ✅ Devices: Various smartphones and tablets
 
-Each user has a profile page that displays:
-- Recipe count
-- Total likes received
-- Categories used
-- All recipes created by the user
+---
 
-### Admin Features
+## 🌍 Deployment
 
-Admin users (username: admin) can:
-- Manage recipe categories (add, edit, delete)
-- Manage ingredients (add, edit, delete)
+### Local Deployment
 
-## Future Enhancements
+1. Follow the Installation & Setup instructions above
+2. Access the application at `http://localhost:5000`
 
-- Email confirmation for account registration  
-- Password reset functionality  
-- Recipe ratings and comments  
-- User favorites and meal planning  
-- More advanced search and filtering options  
+### Heroku Deployment
+
+1. Create a Heroku account and install the Heroku CLI
+2. Create a new Heroku app
+3. Set the following Config Vars in Heroku:
+   - IP: 0.0.0.0
+   - PORT: 5000
+   - SECRET_KEY: your_secret_key
+   - MONGO_URI: your_production_mongodb_uri
+4. Connect your GitHub repository or deploy using Heroku Git
+5. Ensure the Procfile contains: `web: python app.py`
+6. Deploy the application
+
+---
+
+## 🔮 Future Enhancements
+
+- Email confirmation for account registration
+- Password reset functionality
+- Recipe ratings and comments system
+- User favorites and meal planning features
+- More advanced search and filtering options
 - Image upload functionality
+- Social sharing integration
+- Nutritional information calculator
 
-## Testing
+---
 
-The application has been tested on:
+## 🙏 Credits
 
-- **Desktop Browsers**: Chrome, Firefox, Safari  
-- **Mobile Browsers**: Chrome (Android), Safari (iOS)  
-- **Devices**: Various smartphones and tablets
+- [Flask](https://flask.palletsprojects.com/) - Web framework
+- [MongoDB](https://www.mongodb.com/) - Database
+- [Materialize CSS](https://materializecss.com/) - UI components
+- [Font Awesome](https://fontawesome.com/) - Icons
+- [Unsplash](https://unsplash.com/) - Sample images
 
-## Deployment
+---
 
-For production deployment:
-
-1. Update the MongoDB connection URI in `app.py`  
-2. Set debug to False in `app.py`  
-3. Deploy to your preferred hosting platform
-
-## Credits
-
-- Materialize CSS for the UI components  
-- Unsplash for the sample images  
-- Font Awesome for the icons  
-- MongoDB for the database  
-- Flask for the web framework
-
-## License
+## 📜 License
 
 MIT License
 
-## Author
+---
 
-Salvatore Bevilacqua
+## 👨‍💻 Author
+
+**Salvatore Bevilacqua**
+
+## Disclaimer
+
+This project, "Zallo Giafferano," is a portfolio piece created solely for educational purposes and to demonstrate web development skills. It is not a commercial product and is not affiliated with or endorsed by any existing recipe websites or brands. All content is fictional and created for demonstration purposes only. This application is not intended for commercial use.
